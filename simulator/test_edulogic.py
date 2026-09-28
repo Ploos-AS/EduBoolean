@@ -120,6 +120,23 @@ class EduLogicTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             edulogic.run_sequence(c, {"format":"edulogic-sequence-1","circuit":"other","steps":[]})
 
+    def test_sequence_requires_complete_known_state(self):
+        c=self.load_example("counter4-control.json")
+        base={"format":"edulogic-sequence-1","circuit":"counter4-control"}
+        with self.assertRaises(ValueError):
+            edulogic.run_sequence(c,{**base,"steps":[{"inputs":{"ENABLE":1,"RESET":0},"expect_state":{"Q[0]":1}}]})
+        with self.assertRaises(ValueError):
+            edulogic.run_sequence(c,{**base,"steps":[{"inputs":{"ENABLE":1,"RESET":0},"expect_state":{"Q[0]":1,"Q[1]":0,"Q[2]":0,"Q[3]":0,"BAD":0}}]})
+
+    def test_sequence_rejects_missing_or_unknown_inputs(self):
+        c=self.load_example("counter4-control.json")
+        base={"format":"edulogic-sequence-1","circuit":"counter4-control"}
+        full={"Q[0]":1,"Q[1]":0,"Q[2]":0,"Q[3]":0}
+        with self.assertRaises(ValueError):
+            edulogic.run_sequence(c,{**base,"steps":[{"inputs":{"ENABLE":1},"expect_state":full}]})
+        with self.assertRaises(ValueError):
+            edulogic.run_sequence(c,{**base,"steps":[{"inputs":{"ENABLE":1,"RESET":0,"BAD":1},"expect_state":full}]})
+
     def test_sequence_generates_rtl_oracle(self):
         c=self.load_example("counter4-control.json")
         suite=json.loads((ROOT / "examples" / "counter4-control.sequence.json").read_text())
