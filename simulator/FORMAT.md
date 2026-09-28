@@ -17,7 +17,7 @@ A gate contains:
 
 M8 supports `NOT`, `AND`, `OR`, `XOR`, `NAND`, `NOR` and `XNOR`.
 
-The evaluator is combinational and deterministic. Cycles cannot settle in this model and are rejected. Sequential state will use an explicit future format/model rather than giving combinational feedback accidental timing semantics.
+The combinational evaluator is deterministic. Combinational cycles cannot settle in this model and are rejected. Sequential state is represented explicitly by the `state` section described below; it never acquires timing semantics from accidental combinational feedback.
 
 
 ## Teaching metadata
@@ -101,3 +101,20 @@ Control priority on a tick is deliberately explicit:
 ## Sequential qualification vectors
 
 `edulogic-sequence-1` describes a deterministic list of ticks. Every step supplies input values and expected post-tick state. This allows reset, enable, counters, registers and later finite-state machines to be qualified without wall-clock timing.
+
+
+## Qualification CLI
+
+Combinational qualification:
+
+```sh
+python3 edulogic.py examples/half-adder.json --vectors examples/half-adder.vectors.json
+```
+
+Sequential qualification:
+
+```sh
+python3 edulogic.py examples/counter4-control.json --sequence examples/counter4-control.sequence.json
+```
+
+Truth tables are intentionally limited to circuits without state. Stateful behavior must be observed with deterministic ticks or a versioned sequence suite. Vector and sequence suites validate their format version and, when supplied, their target circuit name.
