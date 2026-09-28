@@ -47,6 +47,20 @@ class EduLogicTests(unittest.TestCase):
           {"type":"AND","inputs":["A","B"],"output":"X"}]}
         self.assertEqual(edulogic.evaluate(c,{"A":1,"B":1}),{"F":0})
 
+    def test_dff_tick_samples_atomically(self):
+        c = self.load_example("counter2.json")
+        self.assertEqual(edulogic.initial_state(c), {"Q1":0,"Q0":0})
+        self.assertEqual(edulogic.tick(c, {}, {"Q1":0,"Q0":0}), {"Q1":0,"Q0":1})
+        self.assertEqual(edulogic.tick(c, {}, {"Q1":0,"Q0":1}), {"Q1":1,"Q0":0})
+
+    def test_counter2_sequence(self):
+        c = self.load_example("counter2.json")
+        self.assertEqual(edulogic.run_ticks(c, 8), [
+            {"Q1":0,"Q0":0}, {"Q1":0,"Q0":1}, {"Q1":1,"Q0":0},
+            {"Q1":1,"Q0":1}, {"Q1":0,"Q0":0}, {"Q1":0,"Q0":1},
+            {"Q1":1,"Q0":0}, {"Q1":1,"Q0":1}, {"Q1":0,"Q0":0}
+        ])
+
     def test_cycle_is_rejected(self):
         c={"format":"edulogic-1","inputs":["A"],"outputs":["F"],"gates":[
           {"type":"AND","inputs":["A","F"],"output":"F"}]}
