@@ -2,7 +2,7 @@
 """EduLogic: deterministic educational digital-logic simulator."""
 
 from __future__ import annotations
-import argparse, itertools, json
+import argparse, itertools, json, re
 from pathlib import Path
 
 GATES = {"NOT", "AND", "OR", "XOR", "NAND", "NOR", "XNOR"}
@@ -197,13 +197,36 @@ def run_vectors(circuit, suite):
 
 
 def verilog_name(name):
-    """Map EduLogic scalar signal names to conservative Verilog identifiers."""
-    return name.replace("[", "_").replace("]", "")
+    """Map an EduLogic name to a conservative Verilog identifier."""
+    mapped = re.sub(r"[^A-Za-z0-9_$]", "_", str(name))
+    if not mapped or not re.match(r"[A-Za-z_]", mapped[0]): mapped = "_" + mapped
+    return mapped
+
+def verilog_names(circuit):
+    """Return and validate the complete EduLogic-to-Verilog identifier map."""
+    names = list(circuit.get("inputs", [])) + list(circuit.get("outputs", []))
+    names += [g["output"] for g in circuit.get("gates", [])]
+    names += [n for cell in circuit.get("state", []) for n in state_names(cell)]
+    unique = list(dict.fromkeys(names))
+    mapping = {name: verilog_name(name) for name in unique}
+    reverse = {}
+    for source, target in mapping.items():
+        if target in reverse and reverse[target] != source:
+            raise ValueError(f"Verilog identifier collision: {reverse[target]!r} and {source!r} -> {target!r}")
+        reverse[target] = source
+    return mapping
+
+def verilog_module_name(name):
+    mapped = verilog_name(name)
+    if mapped in {"module","endmodule","input","output","wire","reg","always","assign","begin","end","if","else"}:
+        mapped = "_" + mapped
+    return mapped
 
 def export_verilog(circuit, module_name=None):
     """Export supported EduLogic circuits as synthesizable Verilog-2001."""
     validate(circuit)
-    module_name = module_name or circuit.get("name", "edulogic").replace("-", "_")
+    names_map = verilog_names(circuit)
+    module_name = verilog_module_name(module_name or circuit.get("name", "edulogic"))
     sequential = bool(circuit.get("state"))
     ports = (["clk"] if sequential else []) + circuit["inputs"] + circuit["outputs"]
     lines = [f"module {module_name}({', '.join(verilog_name(x) for x in ports)});"]
@@ -258,7 +281,8 @@ def export_sequence_testbench(circuit, suite, module_name=None):
     if not circuit.get("state"): raise ValueError("sequence testbench requires a stateful circuit")
     if suite.get("format") != "edulogic-sequence-1": raise ValueError("sequence format must be edulogic-sequence-1")
     if suite.get("circuit") and suite["circuit"] != circuit.get("name"): raise ValueError("sequence targets a different circuit")
-    module_name = module_name or circuit.get("name", "edulogic").replace("-", "_")
+    verilog_names(circuit)
+    module_name = verilog_module_name(module_name or circuit.get("name", "edulogic"))
     tb_name = module_name + "_sequence_tb"
     ins = circuit["inputs"]
     outs = circuit["outputs"]
