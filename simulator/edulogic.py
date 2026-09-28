@@ -252,6 +252,42 @@ def export_verilog(circuit, module_name=None):
     lines.append("endmodule")
     return "\n".join(lines) + "\n"
 
+def export_sequence_testbench(circuit, suite, module_name=None):
+    """Generate an Icarus/SystemVerilog testbench from edulogic-sequence-1."""
+    validate(circuit)
+    if not circuit.get("state"): raise ValueError("sequence testbench requires a stateful circuit")
+    if suite.get("format") != "edulogic-sequence-1": raise ValueError("sequence format must be edulogic-sequence-1")
+    if suite.get("circuit") and suite["circuit"] != circuit.get("name"): raise ValueError("sequence targets a different circuit")
+    module_name = module_name or circuit.get("name", "edulogic").replace("-", "_")
+    tb_name = module_name + "_sequence_tb"
+    ins = circuit["inputs"]
+    outs = circuit["outputs"]
+    lines = [f"module {tb_name};", "  reg clk=0;"]
+    for name in ins: lines.append(f"  reg {verilog_name(name)}=0;")
+    for name in outs: lines.append(f"  wire {verilog_name(name)};")
+    lines.append("  integer errors=0;")
+    ports = ["clk"] + [verilog_name(x) for x in ins + outs]
+    lines.append(f"  {module_name} dut({', '.join(ports)});")
+    lines.append("  task pulse; begin #1 clk=1; #1 clk=0; end endtask")
+    lines.append("  initial begin")
+    for index, step in enumerate(suite["steps"], 1):
+        for name in ins:
+            if name not in step.get("inputs", {}): raise ValueError(f"sequence step {index} missing input: {name}")
+            lines.append(f"    {verilog_name(name)}={bit(step['inputs'][name])};")
+        lines.append("    pulse;")
+        expected = {k: bit(v) for k, v in step["expect_state"].items()}
+        unknown = set(expected) - set(outs)
+        if unknown: raise ValueError(f"sequence RTL oracle requires expected state to be observable outputs: {sorted(unknown)}")
+        for name, value in expected.items():
+            vn = verilog_name(name)
+            lines.append(f"    if({vn} !== 1'b{value}) begin $display(\"FAIL step {index} {vn}\"); errors=errors+1; end")
+    lines.append('    if(errors) $fatal(1,"%0d failures",errors);')
+    lines.append('    $display("PASS generated sequence");')
+    lines.append("    $finish;")
+    lines.append("  end")
+    lines.append("endmodule")
+    return "\n".join(lines) + "\n"
+
 def load(path):
     return json.loads(Path(path).read_text(encoding="utf-8"))
 
