@@ -11,29 +11,22 @@ on:
       - '.github/workflows/edulogic.yml'
 
 jobs:
-  qualify:
+  python:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Python qualification
+      - name: EduLogic reference-model tests
         working-directory: simulator
-        run: python -m unittest -v test_edulogic.py
-      - name: Install Icarus Verilog
-        run: sudo apt-get update && sudo apt-get install -y iverilog
-      - name: Generate half-adder Verilog
-        working-directory: simulator
-        run: python edulogic.py examples/half-adder.json --verilog > /tmp/half-adder.v
-      - name: Compare golden HDL
-        run: diff -u simulator/examples/half-adder.v /tmp/half-adder.v
-      - name: Compile and simulate half-adder HDL
-        run: |
-          iverilog -g2005 -s half_adder_tb -o /tmp/half-adder.vvp /tmp/half-adder.v simulator/examples/half-adder.tb.v
-          vvp /tmp/half-adder.vvp
-      - name: Compile generated counter HDL
-        working-directory: simulator
-        run: |
-          python edulogic.py examples/counter4-control.json --verilog > /tmp/counter4.v
-          iverilog -g2005 -s counter4_control -o /tmp/counter4.vvp /tmp/counter4.v
+        run: make test
+
+  hdl:
+    uses: Ploos-AS/hardware-ci/.github/workflows/hdl.yml@main
+    with:
+      working_directory: simulator
+      test_command: "make hdl-test"
+      verilog_files: "examples/half-adder.v"
+      top: half_adder
+      conformance_command: "make hdl-conformance"
