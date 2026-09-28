@@ -113,6 +113,18 @@ class EduLogicTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             edulogic.run_vectors(c, {"format":"edulogic-vectors-1","circuit":"other","vectors":[]})
 
+    def test_vectors_require_complete_known_io(self):
+        c=self.load_example("half-adder.json")
+        base={"format":"edulogic-vectors-1","circuit":"half-adder"}
+        with self.assertRaises(ValueError):
+            edulogic.run_vectors(c,{**base,"vectors":[{"inputs":{"A":1},"expect":{"SUM":1,"CARRY":0}}]})
+        with self.assertRaises(ValueError):
+            edulogic.run_vectors(c,{**base,"vectors":[{"inputs":{"A":1,"B":0,"BAD":1},"expect":{"SUM":1,"CARRY":0}}]})
+        with self.assertRaises(ValueError):
+            edulogic.run_vectors(c,{**base,"vectors":[{"inputs":{"A":1,"B":0},"expect":{"SUM":1}}]})
+        with self.assertRaises(ValueError):
+            edulogic.run_vectors(c,{**base,"vectors":[{"inputs":{"A":1,"B":0},"expect":{"SUM":1,"CARRY":0,"BAD":0}}]})
+
     def test_sequence_format_and_target_are_validated(self):
         c=self.load_example("counter4-control.json")
         with self.assertRaises(ValueError):
