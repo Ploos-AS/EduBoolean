@@ -106,3 +106,17 @@ Til M1 hører også [oppgavesettet](../../exercises/m1-fundamentals.md) og [halv
 14. [Ekvivalensbevis med sannhetstabeller](14-ekvivalensbevis.md)
 
 Til M2 hører [oppgavesettet](../../exercises/m2-algebra.md) og [kretsforenklings-labben](../../labs/03-forenkle-krets.md).
+
+
+## M3 – Logiske porter og kombinatoriske kretser
+
+15. [Logiske porter](15-logiske-porter.md)
+16. [Fra uttrykk til krets](16-uttrykk-til-krets.md)
+17. [Halvadder](17-halvadder.md)
+18. [Fulladder](18-fulladder.md)
+19. [Flerbits addisjon og ripple carry](19-ripple-carry.md)
+20. [Multiplexer](20-multiplexer.md)
+21. [Dekodere og encodere](21-dekoder-encoder.md)
+22. [Komparatorer](22-komparator.md)
+
+Praksis: [M3-oppgaver](../../exercises/m3-combinational.md), [4-bits adderer](../../labs/04-bygg-4bit-adder.md) og [2-til-1 MUX](../../labs/05-mux.md).
