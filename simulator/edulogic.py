@@ -152,6 +152,8 @@ def tick(circuit, input_values, state_values):
     return next_state
 
 def run_sequence(circuit, suite):
+    if suite.get("format") != "edulogic-sequence-1": raise ValueError("sequence format must be edulogic-sequence-1")
+    if suite.get("circuit") and suite["circuit"] != circuit.get("name"): raise ValueError("sequence targets a different circuit")
     state = initial_state(circuit)
     results = []
     for index, step in enumerate(suite["steps"], 1):
@@ -173,15 +175,21 @@ def run_ticks(circuit, count, input_values=None, state_values=None):
 
 def truth_table(circuit):
     validate(circuit)
+    if circuit.get("state"): raise ValueError("truth tables require a combinational circuit; use ticks or a sequence for stateful circuits")
     names = circuit["inputs"]
     return [(given := dict(zip(names, values)), evaluate(circuit, given))
             for values in itertools.product((0, 1), repeat=len(names))]
 
 def run_vectors(circuit, suite):
+    if suite.get("format") != "edulogic-vectors-1": raise ValueError("vector format must be edulogic-vectors-1")
+    if suite.get("circuit") and suite["circuit"] != circuit.get("name"): raise ValueError("vectors target a different circuit")
+    if circuit.get("state"): raise ValueError("vectors require a combinational circuit; use a sequence for stateful circuits")
     results = []
     for index, vector in enumerate(suite["vectors"], 1):
         actual = evaluate(circuit, vector["inputs"])
         expected = {k: bit(v) for k, v in vector["expect"].items()}
+        unknown = set(expected) - set(circuit["outputs"])
+        if unknown: raise ValueError(f"vectors expect unknown outputs: {sorted(unknown)}")
         ok = all(actual.get(k) == v for k, v in expected.items())
         results.append({"index": index, "ok": ok, "inputs": vector["inputs"],
                         "expect": expected, "actual": actual})
@@ -253,6 +261,7 @@ def main():
     parser.add_argument("--truth-table", action="store_true")
     parser.add_argument("--trace", action="store_true")
     parser.add_argument("--vectors", metavar="FILE")
+    parser.add_argument("--sequence", metavar="FILE")
     parser.add_argument("--ticks", type=int, metavar="N")
     parser.add_argument("--verilog", action="store_true")
     parser.add_argument("--set", action="append", default=[], metavar="NAME=BIT")
@@ -267,6 +276,11 @@ def main():
         for given, result in truth_table(circuit):
             row = {**given, **result}; print(" ".join(str(row[c]) for c in cols))
         return
+    if args.sequence:
+        results = run_sequence(circuit, load(args.sequence))
+        for r in results:
+            print(f"{'PASS' if r['ok'] else 'FAIL'} {r['index']}: {r['inputs']} -> {r['state']}")
+        raise SystemExit(0 if all(r["ok"] for r in results) else 1)
     if args.vectors:
         results = run_vectors(circuit, load(args.vectors))
         for r in results:
