@@ -122,14 +122,19 @@ Goal: connect course concepts to computer architecture.
 
 Goal: make the same ideas recognizable in programming.
 
-- Boolean types
-- comparisons
-- `if` conditions
-- logical operators
-- bitwise versus logical operations
-- masks
-- permissions and feature flags
-- practical C and Python examples
+- [x] Boolean types
+- [x] comparisons
+- [x] `if` conditions and control flow
+- [x] logical operators in Python and C
+- [x] short-circuit evaluation and side-effect caveats
+- [x] bitwise versus logical operations
+- [x] masks
+- [x] permissions and feature flags
+- [x] De Morgan in software
+- [x] truth tables as exhaustive test design
+- [x] practical C and Python examples and labs
+
+**M7 core status: COMPLETE.**
 
 ## M8 — EduLogic Simulator
 
