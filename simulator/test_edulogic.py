@@ -125,9 +125,19 @@ class EduLogicTests(unittest.TestCase):
         suite=json.loads((ROOT / "examples" / "counter4-control.sequence.json").read_text())
         tb=edulogic.export_sequence_testbench(c,suite)
         self.assertIn("module counter4_control_sequence_tb;",tb)
-        self.assertIn("counter4_control dut(clk, ENABLE, RESET, Q_3, Q_2, Q_1, Q_0);",tb)
+        self.assertIn("counter4_control dut(clk, ENABLE, RESET, Q_3_, Q_2_, Q_1_, Q_0_);",tb)
         self.assertIn("PASS generated sequence",tb)
         self.assertIn("FAIL step 5 Q_0",tb)
+
+    def test_verilog_identifier_mapping(self):
+        self.assertEqual(edulogic.verilog_name("Q[3]"), "Q_3_")
+        self.assertEqual(edulogic.verilog_name("carry-out"), "carry_out")
+        self.assertEqual(edulogic.verilog_name("1st signal"), "_1st_signal")
+
+    def test_verilog_identifier_collision_rejected(self):
+        c={"format":"edulogic-1","inputs":["A-B","A B"],"outputs":["Y"],
+           "gates":[{"type":"AND","inputs":["A-B","A B"],"output":"Y"}]}
+        with self.assertRaises(ValueError): edulogic.export_verilog(c)
 
     def test_verilog_half_adder_golden(self):
         c = self.load_example("half-adder.json")
@@ -142,9 +152,9 @@ class EduLogicTests(unittest.TestCase):
         self.assertIn("if (RESET)", v)
         self.assertIn("if (ENABLE)", v)
         self.assertIn("<= 1'b0;", v)
-        self.assertIn("output reg Q_3;", v)
-        self.assertIn("output reg Q_0;", v)
-        self.assertIn("{Q_3, Q_2, Q_1, Q_0} <= {Q_3, Q_2, Q_1, Q_0} + 4'd1;", v)
+        self.assertIn("output reg Q_3_;", v)
+        self.assertIn("output reg Q_0_;", v)
+        self.assertIn("{Q_3_, Q_2_, Q_1_, Q_0_} <= {Q_3_, Q_2_, Q_1_, Q_0_} + 4'd1;", v)
 
     def test_cycle_is_rejected(self):
         c={"format":"edulogic-1","inputs":["A"],"outputs":["F"],"gates":[
