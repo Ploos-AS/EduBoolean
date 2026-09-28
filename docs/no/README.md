@@ -135,3 +135,19 @@ Praksis: [M3-oppgaver](../../exercises/m3-combinational.md), [4-bits adderer](..
 31. [K-map kontra algebra](31-kmap-vs-algebra.md)
 
 Praksis: [M4-oppgaver](../../exercises/m4-karnaugh.md) og [K-map-optimaliseringslab](../../labs/06-kmap-optimalisering.md).
+
+
+## M5 – Sekvensiell logikk
+
+32. [Fra logikk til minne](32-fra-logikk-til-minne.md)
+33. [SR-latch](33-sr-latch.md)
+34. [D-latch](34-d-latch.md)
+35. [Klokke og tid](35-klokke.md)
+36. [D-flip-flop](36-d-flip-flop.md)
+37. [Register](37-register.md)
+38. [Shift-register](38-shift-register.md)
+39. [Tellere](39-tellere.md)
+40. [Tilstand og FSM-broen](40-state.md)
+41. [Sett sammen et sekvensielt system](41-sequential-system.md)
+
+Praksis: [M5-oppgaver](../../exercises/m5-sequential.md) og [2-bits synkron teller](../../labs/07-2bit-teller.md).
