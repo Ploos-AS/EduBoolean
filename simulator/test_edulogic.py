@@ -129,6 +129,23 @@ class EduLogicTests(unittest.TestCase):
         self.assertIn("PASS generated sequence",tb)
         self.assertIn("FAIL step 5 Q_0",tb)
 
+    def test_initial_state_must_fit_width(self):
+        c={"format":"edulogic-1","inputs":[],"outputs":["Q[0]"],
+           "state":[{"type":"COUNTER","q":"Q","width":1,"initial":2}],"gates":[]}
+        with self.assertRaises(ValueError): edulogic.validate(c)
+
+    def test_counter_step_must_fit_width(self):
+        c={"format":"edulogic-1","inputs":[],"outputs":["Q[0]","Q[1]"],
+           "state":[{"type":"COUNTER","q":"Q","width":2,"step":4}],"gates":[]}
+        with self.assertRaises(ValueError): edulogic.validate(c)
+
+    def test_counter_step_wraps_deterministically(self):
+        c={"format":"edulogic-1","inputs":[],"outputs":["Q[0]","Q[1]"],
+           "state":[{"type":"COUNTER","q":"Q","width":2,"step":3}],"gates":[]}
+        s=edulogic.initial_state(c)
+        self.assertEqual(edulogic.tick(c,{},s),{"Q[0]":1,"Q[1]":1})
+        self.assertEqual(edulogic.tick(c,{},{"Q[0]":1,"Q[1]":1}),{"Q[0]":0,"Q[1]":1})
+
     def test_verilog_identifier_mapping(self):
         self.assertEqual(edulogic.verilog_name("Q[3]"), "Q_3_")
         self.assertEqual(edulogic.verilog_name("carry-out"), "carry_out")
