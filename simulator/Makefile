@@ -10,7 +10,7 @@ hdl-generate:
 	diff -u examples/half-adder.v build-half-adder.v
 
 hdl-test: hdl-generate
-	iverilog -g2005 -s half_adder_tb -o /tmp/half-adder.vvp build-half-adder.v examples/half-adder.tb.v
+	iverilog -g2012 -s half_adder_tb -o /tmp/half-adder.vvp build-half-adder.v examples/half-adder.tb.v
 	vvp /tmp/half-adder.vvp
 
 hdl-conformance:
