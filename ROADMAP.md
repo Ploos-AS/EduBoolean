@@ -140,16 +140,21 @@ Goal: make the same ideas recognizable in programming.
 
 Goal: make the course interactive.
 
-Planned capabilities:
+Capabilities:
 
-- switches and LEDs
-- NOT/AND/OR/XOR/NAND/NOR/XNOR gates
-- wires and signal highlighting
-- automatic truth-table generation
-- combinational circuit evaluation
-- save/load circuit format
-- deterministic core independent of UI
-- later HDL export/import experiments
+- [ ] switches and LEDs teaching metadata
+- [x] NOT/AND/OR/XOR/NAND/NOR/XNOR gates
+- [ ] wires and signal highlighting
+- [x] automatic truth-table generation
+- [x] combinational circuit evaluation
+- [x] versioned JSON save/load circuit format
+- [x] deterministic core independent of UI
+- [x] headless CLI
+- [x] unit tests and half-adder qualification example
+- [ ] explicit sequential clock/state model
+- [ ] later HDL export/import experiments
+
+**M8 status: IN PROGRESS.** The deterministic combinational core is now usable; visualization, teaching metadata and sequential semantics remain.
 
 ## M9 — Publishing
 
