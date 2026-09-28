@@ -53,13 +53,17 @@ Goal: teach Boolean manipulation without assuming prior algebra expertise.
 
 Goal: connect abstract expressions to circuits.
 
-- gate symbols
-- expression ↔ gate network
-- propagation concepts
-- half adder and full adder
-- multiplexers
-- decoders and encoders
-- comparators
+- [x] gate concepts and Boolean operations
+- [x] expression ↔ gate network
+- [x] introductory propagation concepts
+- [x] half adder and full adder
+- [x] multi-bit ripple-carry addition
+- [x] multiplexers
+- [x] decoders and encoders
+- [x] comparators
+- [x] worked exercises and practical labs
+
+**M3 core status: COMPLETE.**
 
 ## M4 — Karnaugh Maps
 
