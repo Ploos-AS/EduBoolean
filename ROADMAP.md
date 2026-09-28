@@ -24,13 +24,16 @@ Exit criterion: a newcomer can understand what the course will teach, start the 
 
 Goal: complete the beginner core.
 
-- Boolean values and variables
-- NOT, AND and OR
-- XOR, NAND, NOR and XNOR
-- truth tables
-- translating everyday statements into Boolean expressions
-- exercises with worked solutions
-- Norwegian complete, English parity started
+- [x] Boolean values and variables
+- [x] NOT, AND and OR
+- [x] XOR, NAND, NOR and XNOR
+- [x] truth tables
+- [x] translating everyday statements into Boolean expressions
+- [x] exercises with worked solutions
+- [x] first practical half-adder lab
+- [ ] English lesson parity (continues incrementally alongside later milestones)
+
+**M1 core status: COMPLETE.** Norwegian beginner core is usable end-to-end; English translation parity remains an ongoing publishing track.
 
 ## M2 — Algebra and Simplification
 
