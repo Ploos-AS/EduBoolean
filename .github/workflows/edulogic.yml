@@ -23,7 +23,7 @@ jobs:
         run: make test
 
   hdl:
-    uses: Ploos-AS/hardware-ci/.github/workflows/hdl.yml@main
+    uses: Ploos-AS/hardware-ci/.github/workflows/hdl.yml@v1
     with:
       working_directory: simulator
       test_command: "make hdl-test"
