@@ -93,3 +93,16 @@ Se [`labs/01-brytere-og-logikk.md`](../../labs/01-brytere-og-logikk.md).
 7. [Sannhetstabeller](07-sannhetstabeller.md)
 
 Til M1 hører også [oppgavesettet](../../exercises/m1-fundamentals.md) og [halvadder-labben](../../labs/02-halvadderer.md).
+
+
+## M2 – Algebra og forenkling
+
+8. [Boolsk ekvivalens](08-ekvivalens.md)
+9. [Grunnlovene](09-grunnlover.md)
+10. [Kommutative, assosiative og distributive lover](10-kommutativ-assosiativ-distributiv.md)
+11. [Absorpsjon](11-absorpsjon.md)
+12. [De Morgans lover](12-de-morgan.md)
+13. [Systematisk forenkling](13-forenkling.md)
+14. [Ekvivalensbevis med sannhetstabeller](14-ekvivalensbevis.md)
+
+Til M2 hører [oppgavesettet](../../exercises/m2-algebra.md) og [kretsforenklings-labben](../../labs/03-forenkle-krets.md).
