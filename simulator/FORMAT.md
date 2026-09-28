@@ -52,3 +52,23 @@ This keeps circuit design separate from expected behavior and allows the same ve
 ## Signal introspection
 
 The core can return all settled named signals, not only primary outputs. This allows teaching tools to highlight intermediate nets without changing evaluation semantics.
+
+
+## Sequential state
+
+M8 models synchronous state explicitly. A D flip-flop is declared separately from combinational gates:
+
+```json
+"state": [
+  {"type":"DFF","d":"D0","q":"Q0","initial":0}
+]
+```
+
+A deterministic tick has two phases:
+
+1. settle all combinational logic using the current Q values
+2. atomically sample each D signal and replace all Q values together
+
+There is no wall-clock, implicit propagation time or accidental update order. Repeated ticks therefore produce reproducible state traces.
+
+The initial M8 state model intentionally supports DFF cells as the primitive. Multi-bit registers and synchronous counters can be composed from multiple DFF cells; richer components may later be added as validated convenience abstractions.
