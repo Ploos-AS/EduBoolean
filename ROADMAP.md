@@ -154,6 +154,9 @@ Capabilities:
 - [x] reusable declarative test-vector format and CLI runner
 - [x] explicit deterministic DFF/tick clock/state model
 - [x] M5 2-bit synchronous counter qualification
+- [x] REGISTER and COUNTER convenience state cells
+- [x] synchronous reset and enable/hold semantics
+- [x] declarative sequential qualification vectors
 - [ ] later HDL export/import experiments
 
 **M8 status: IN PROGRESS.** Combinational and deterministic sequential cores are usable and the M5 counter is represented directly; richer visualization/components and HDL bridge work remain.
