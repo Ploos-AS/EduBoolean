@@ -72,3 +72,32 @@ A deterministic tick has two phases:
 There is no wall-clock, implicit propagation time or accidental update order. Repeated ticks therefore produce reproducible state traces.
 
 The initial M8 state model intentionally supports DFF cells as the primitive. Multi-bit registers and synchronous counters can be composed from multiple DFF cells; richer components may later be added as validated convenience abstractions.
+
+
+## Register and counter convenience cells
+
+DFF remains the primitive sequential reference model. M8 also supports compact synchronous teaching components.
+
+A register declares a width and one D signal per bit:
+
+```json
+{"type":"REGISTER","q":"Q","width":2,"d":["D0","D1"],"enable":"EN","reset":"RST"}
+```
+
+A counter can be declared as:
+
+```json
+{"type":"COUNTER","q":"Q","width":4,"enable":"EN","reset":"RST"}
+```
+
+Bits are named from least significant upward as `Q[0]`, `Q[1]`, etc.
+
+Control priority on a tick is deliberately explicit:
+
+1. asserted synchronous `reset` clears the component
+2. deasserted `enable` holds the old state
+3. otherwise REGISTER samples D or COUNTER advances
+
+## Sequential qualification vectors
+
+`edulogic-sequence-1` describes a deterministic list of ticks. Every step supplies input values and expected post-tick state. This allows reset, enable, counters, registers and later finite-state machines to be qualified without wall-clock timing.
