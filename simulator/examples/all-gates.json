@@ -1,0 +1,15 @@
+{
+  "format": "edulogic-1",
+  "name": "all-gates",
+  "inputs": ["A", "B"],
+  "outputs": ["NOT_A", "AND", "OR", "XOR", "NAND", "NOR", "XNOR"],
+  "gates": [
+    {"type": "NOT", "inputs": ["A"], "output": "NOT_A"},
+    {"type": "AND", "inputs": ["A", "B"], "output": "AND"},
+    {"type": "OR", "inputs": ["A", "B"], "output": "OR"},
+    {"type": "XOR", "inputs": ["A", "B"], "output": "XOR"},
+    {"type": "NAND", "inputs": ["A", "B"], "output": "NAND"},
+    {"type": "NOR", "inputs": ["A", "B"], "output": "NOR"},
+    {"type": "XNOR", "inputs": ["A", "B"], "output": "XNOR"}
+  ]
+}
