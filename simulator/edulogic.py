@@ -40,9 +40,14 @@ def validate(circuit):
         elif kind in ("REGISTER", "COUNTER"):
             width = int(cell["width"])
             if width < 1: raise ValueError(f"{kind} width must be positive")
+            if kind == "COUNTER":
+                step = int(cell.get("step", 1))
+                if step < 0 or step >= (1 << width): raise ValueError("COUNTER step must fit width and be non-negative")
             qs = [f"{cell['q']}[{i}]" for i in range(width)]
         else:
             raise ValueError(f"unsupported state cell: {kind}")
+        initial = int(cell.get("initial", 0))
+        if initial < 0 or initial >= (1 << len(qs)): raise ValueError("initial state does not fit width")
         for q in qs:
             if q in names: raise ValueError(f"signal has multiple drivers: {q}")
             names.add(q)
