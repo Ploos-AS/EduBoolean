@@ -1,0 +1,20 @@
+{
+  "format": "edulogic-1",
+  "name": "counter2",
+  "inputs": [],
+  "outputs": ["Q1", "Q0"],
+  "state": [
+    {"type":"DFF","d":"D1","q":"Q1","initial":0},
+    {"type":"DFF","d":"D0","q":"Q0","initial":0}
+  ],
+  "teaching": {
+    "leds": [
+      {"signal":"Q1","label":"Counter bit 1"},
+      {"signal":"Q0","label":"Counter bit 0"}
+    ]
+  },
+  "gates": [
+    {"type":"XOR","inputs":["Q1","Q0"],"output":"D1"},
+    {"type":"NOT","inputs":["Q0"],"output":"D0"}
+  ]
+}
