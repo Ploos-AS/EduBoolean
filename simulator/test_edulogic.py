@@ -61,6 +61,24 @@ class EduLogicTests(unittest.TestCase):
             {"Q1":1,"Q0":0}, {"Q1":1,"Q0":1}, {"Q1":0,"Q0":0}
         ])
 
+    def test_counter_enable_reset_sequence(self):
+        c = self.load_example("counter4-control.json")
+        suite = json.loads((ROOT / "examples" / "counter4-control.sequence.json").read_text())
+        results = edulogic.run_sequence(c, suite)
+        self.assertTrue(all(r["ok"] for r in results))
+
+    def test_register_load_enable_reset(self):
+        c={"format":"edulogic-1","inputs":["D0","D1","EN","RST"],"outputs":["Q[0]","Q[1]"],
+           "state":[{"type":"REGISTER","q":"Q","width":2,"d":["D0","D1"],"enable":"EN","reset":"RST"}],
+           "gates":[]}
+        s=edulogic.initial_state(c)
+        s=edulogic.tick(c,{"D0":1,"D1":1,"EN":1,"RST":0},s)
+        self.assertEqual(s,{"Q[0]":1,"Q[1]":1})
+        s=edulogic.tick(c,{"D0":0,"D1":0,"EN":0,"RST":0},s)
+        self.assertEqual(s,{"Q[0]":1,"Q[1]":1})
+        s=edulogic.tick(c,{"D0":1,"D1":1,"EN":0,"RST":1},s)
+        self.assertEqual(s,{"Q[0]":0,"Q[1]":0})
+
     def test_cycle_is_rejected(self):
         c={"format":"edulogic-1","inputs":["A"],"outputs":["F"],"gates":[
           {"type":"AND","inputs":["A","F"],"output":"F"}]}
