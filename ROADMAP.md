@@ -69,12 +69,17 @@ Goal: connect abstract expressions to circuits.
 
 Goal: provide a visual simplification method.
 
-- 2-variable maps
-- 3-variable maps
-- 4-variable maps
-- grouping rules
-- don't-care conditions
-- compare K-map and algebraic simplification
+- [x] 2-variable maps
+- [x] Gray-code adjacency
+- [x] 3-variable maps
+- [x] 4-variable maps
+- [x] grouping rules, wrap-around and overlap
+- [x] don't-care conditions
+- [x] translating groups into expressions
+- [x] compare K-map and algebraic simplification
+- [x] exercises and optimization lab
+
+**M4 core status: COMPLETE.**
 
 ## M5 — Sequential Logic
 
