@@ -29,7 +29,10 @@ def validate(circuit):
     inputs, outputs, gates = circuit.get("inputs", []), circuit.get("outputs", []), circuit.get("gates", [])
     state = circuit.get("state", [])
     if not outputs: raise ValueError("circuit needs outputs")
+    if len(set(inputs)) != len(inputs): raise ValueError("duplicate input name")
+    if len(set(outputs)) != len(outputs): raise ValueError("duplicate output name")
     names = set(inputs)
+    state_cells = []
     for cell in state:
         kind = cell.get("type")
         if kind == "DFF":
@@ -43,12 +46,30 @@ def validate(circuit):
         for q in qs:
             if q in names: raise ValueError(f"signal has multiple drivers: {q}")
             names.add(q)
-    if len(names) != len(inputs): raise ValueError("duplicate input name")
+        state_cells.append((cell, qs))
     for gate in gates:
         kind, ins, out = gate["type"].upper(), gate["inputs"], gate["output"]
         if kind not in GATES: raise ValueError(f"unsupported gate: {kind}")
+        if kind == "NOT" and len(ins) != 1: raise ValueError("NOT requires one input")
+        if kind != "NOT" and len(ins) < 2: raise ValueError(f"{kind} requires at least two inputs")
         if out in names: raise ValueError(f"signal has multiple drivers: {out}")
         names.add(out)
+    for gate in gates:
+        unknown = [name for name in gate["inputs"] if name not in names]
+        if unknown: raise ValueError(f"gate {gate['output']} references unknown signals: {unknown}")
+    for cell, qs in state_cells:
+        kind = cell["type"]
+        if kind == "DFF":
+            refs = [cell["d"]]
+        elif kind == "REGISTER":
+            refs = list(cell["d"])
+            if len(refs) != len(qs): raise ValueError("REGISTER d width mismatch")
+        else:
+            refs = []
+        for key in ("enable", "reset"):
+            if cell.get(key): refs.append(cell[key])
+        unknown = [name for name in refs if name not in names]
+        if unknown: raise ValueError(f"{kind} references unknown signals: {unknown}")
     unknown = [o for o in outputs if o not in names]
     if unknown: raise ValueError(f"undriven outputs: {unknown}")
     teaching = circuit.get("teaching", {})
