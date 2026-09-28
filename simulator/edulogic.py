@@ -31,10 +31,18 @@ def validate(circuit):
     if not outputs: raise ValueError("circuit needs outputs")
     names = set(inputs)
     for cell in state:
-        if cell.get("type") != "DFF": raise ValueError(f"unsupported state cell: {cell.get('type')}")
-        q = cell["q"]
-        if q in names: raise ValueError(f"signal has multiple drivers: {q}")
-        names.add(q)
+        kind = cell.get("type")
+        if kind == "DFF":
+            qs = [cell["q"]]
+        elif kind in ("REGISTER", "COUNTER"):
+            width = int(cell["width"])
+            if width < 1: raise ValueError(f"{kind} width must be positive")
+            qs = [f"{cell['q']}[{i}]" for i in range(width)]
+        else:
+            raise ValueError(f"unsupported state cell: {kind}")
+        for q in qs:
+            if q in names: raise ValueError(f"signal has multiple drivers: {q}")
+            names.add(q)
     if len(names) != len(inputs): raise ValueError("duplicate input name")
     for gate in gates:
         kind, ins, out = gate["type"].upper(), gate["inputs"], gate["output"]
@@ -48,9 +56,22 @@ def validate(circuit):
         for item in teaching.get(group, []):
             if item["signal"] not in names: raise ValueError(f"{group} references unknown signal: {item['signal']}")
 
+def state_names(cell):
+    if cell["type"] == "DFF": return [cell["q"]]
+    return [f"{cell['q']}[{i}]" for i in range(int(cell["width"]))]
+
 def initial_state(circuit):
     validate(circuit)
-    return {cell["q"]: bit(cell.get("initial", 0)) for cell in circuit.get("state", [])}
+    state = {}
+    for cell in circuit.get("state", []):
+        if cell["type"] == "DFF":
+            state[cell["q"]] = bit(cell.get("initial", 0))
+        else:
+            value = int(cell.get("initial", 0))
+            width = int(cell["width"])
+            if value < 0 or value >= (1 << width): raise ValueError("initial state does not fit width")
+            for i, name in enumerate(state_names(cell)): state[name] = (value >> i) & 1
+    return state
 
 def evaluate_signals(circuit, input_values, state_values=None):
     """Return every settled signal, including intermediate nets and state outputs."""
@@ -58,7 +79,7 @@ def evaluate_signals(circuit, input_values, state_values=None):
     missing = [name for name in circuit["inputs"] if name not in input_values]
     if missing: raise ValueError(f"missing input values: {missing}")
     signals = {name: bit(input_values[name]) for name in circuit["inputs"]}
-    expected_state = {cell["q"] for cell in circuit.get("state", [])}
+    expected_state = {name for cell in circuit.get("state", []) for name in state_names(cell)}
     supplied_state = initial_state(circuit) if state_values is None else state_values
     missing_state = expected_state - set(supplied_state)
     if missing_state: raise ValueError(f"missing state values: {sorted(missing_state)}")
@@ -85,10 +106,40 @@ def tick(circuit, input_values, state_values):
     signals = evaluate_signals(circuit, input_values, state_values)
     next_state = {}
     for cell in circuit.get("state", []):
-        d = cell["d"]
-        if d not in signals: raise ValueError(f"DFF {cell['q']} references unresolved D signal: {d}")
-        next_state[cell["q"]] = signals[d]
+        kind = cell["type"]
+        names = state_names(cell)
+        reset = signals.get(cell.get("reset"), 0) if cell.get("reset") else 0
+        enable = signals.get(cell.get("enable"), 1) if cell.get("enable") else 1
+        if reset:
+            for name in names: next_state[name] = 0
+        elif not enable:
+            for name in names: next_state[name] = state_values[name]
+        elif kind == "DFF":
+            d = cell["d"]
+            if d not in signals: raise ValueError(f"DFF {cell['q']} references unresolved D signal: {d}")
+            next_state[cell["q"]] = signals[d]
+        elif kind == "REGISTER":
+            ds = cell["d"]
+            if len(ds) != len(names): raise ValueError("REGISTER d width mismatch")
+            for name, d in zip(names, ds):
+                if d not in signals: raise ValueError(f"REGISTER references unresolved D signal: {d}")
+                next_state[name] = signals[d]
+        elif kind == "COUNTER":
+            value = sum(state_values[name] << i for i, name in enumerate(names))
+            value = (value + int(cell.get("step", 1))) % (1 << len(names))
+            for i, name in enumerate(names): next_state[name] = (value >> i) & 1
     return next_state
+
+def run_sequence(circuit, suite):
+    state = initial_state(circuit)
+    results = []
+    for index, step in enumerate(suite["steps"], 1):
+        inputs = step.get("inputs", {})
+        state = tick(circuit, inputs, state)
+        expected = {k: bit(v) for k, v in step["expect_state"].items()}
+        ok = all(state.get(k) == v for k, v in expected.items())
+        results.append({"index":index,"ok":ok,"inputs":inputs,"expect":expected,"state":dict(state)})
+    return results
 
 def run_ticks(circuit, count, input_values=None, state_values=None):
     input_values = input_values or {}
