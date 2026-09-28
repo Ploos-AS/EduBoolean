@@ -152,10 +152,11 @@ Capabilities:
 - [x] headless CLI
 - [x] unit tests and half-adder qualification example
 - [x] reusable declarative test-vector format and CLI runner
-- [ ] explicit sequential clock/state model
+- [x] explicit deterministic DFF/tick clock/state model
+- [x] M5 2-bit synchronous counter qualification
 - [ ] later HDL export/import experiments
 
-**M8 status: IN PROGRESS.** The deterministic combinational core is now usable; visualization, teaching metadata and sequential semantics remain.
+**M8 status: IN PROGRESS.** Combinational and deterministic sequential cores are usable and the M5 counter is represented directly; richer visualization/components and HDL bridge work remain.
 
 ## M9 — Publishing
 
