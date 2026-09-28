@@ -1,56 +1,67 @@
 # EduLogic Simulator
 
-This directory is reserved for EduBoolean's interactive logic simulator.
+EduLogic is EduBoolean's deterministic, headless logic simulator.
 
-## M0 architecture direction
+## M8 implementation
 
-The simulator should be split into a deterministic logic core and one or more frontends.
+The first implementation deliberately starts with a small dependency-free Python core. The core has no GUI, wall-clock or real-time dependency.
 
-```text
-course exercises / UI / CLI
-           |
-           v
-     simulator API
-           |
-           v
-   deterministic core
-           |
-           +-- gates
-           +-- wires/nets
-           +-- circuit graph
-           +-- evaluation
-           +-- truth tables
-           +-- serialization
+Supported gates:
+
+- NOT
+- AND
+- OR
+- XOR
+- NAND
+- NOR
+- XNOR
+
+It supports versioned JSON circuits, deterministic combinational evaluation and automatic truth-table generation.
+
+## Quick start
+
+```bash
+cd simulator
+python3 edulogic.py examples/half-adder.json --truth-table
+python3 edulogic.py examples/half-adder.json --set A=1 --set B=1
+python3 -m unittest -v test_edulogic.py
 ```
 
-## Core requirements
+Expected half-adder truth table:
 
-The core should:
+```text
+A B SUM CARRY
+0 0 0 0
+0 1 1 0
+1 0 1 0
+1 1 0 1
+```
 
-- have no dependency on wall-clock time for combinational evaluation
-- be usable without a GUI
-- support deterministic tests
-- represent 0 and 1 explicitly
-- support NOT, AND, OR, XOR, NAND, NOR and XNOR
-- allow circuits to be constructed programmatically
-- generate truth tables for suitable combinational circuits
-- expose enough state for teaching tools to highlight signal flow
-- use a documented, versioned save format
+See [FORMAT.md](FORMAT.md) for the circuit format.
 
-## Later extensions
+## Architecture
 
-After the combinational core is stable, possible extensions include:
+```text
+course exercises / future UI / CLI
+             |
+             v
+       EduLogic core
+             |
+     +-------+--------+
+     |       |        |
+   gates   graph   truth tables
+```
 
-- switches, LEDs and interactive wiring
-- propagation visualization
-- sequential components and clocks
-- circuit challenges
-- import/export
-- HDL generation experiments
-- browser frontend
-- desktop frontend
-- CLI/headless qualification
+The combinational evaluator repeatedly evaluates gates whose inputs are known. This makes the result independent of gate ordering in the JSON file.
 
-## Non-goal for M0
+A circuit that cannot settle because of a cycle or missing dependency is rejected. Sequential logic will later get explicit clock/state semantics rather than abusing the combinational evaluator.
 
-M0 does not implement the simulator. It freezes enough architectural direction to prevent course content and future software from growing in incompatible directions.
+## Next M8 increments
+
+- richer validation and diagnostics
+- named switches/LEDs as teaching metadata
+- signal trace/introspection
+- reusable test-vector format
+- sequential state model
+- optional browser/desktop frontend
+- HDL bridge experiments
