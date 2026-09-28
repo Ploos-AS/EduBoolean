@@ -104,14 +104,19 @@ EduFSM is a natural follow-on course for deeper treatment of state machines.
 
 Goal: connect course concepts to computer architecture.
 
-- n-bit adders
-- ALU functions
-- flags
-- register selection
-- control signals
-- opcode decoding
-- small CPU datapath examples
-- bridges to EduCPU and EduK8
+- [x] n-bit adders as CPU building blocks
+- [x] ALU functions and result selection
+- [x] Zero, Carry, Negative and Overflow flags
+- [x] register selection and write enable
+- [x] opcode decoding
+- [x] control signals
+- [x] program counter and conditional branch
+- [x] FETCH/EXECUTE control-state model
+- [x] small CPU datapath example
+- [x] mini-ALU and CPU trace labs
+- [x] bridge to EduCPU and EduK8
+
+**M6 core status: COMPLETE.**
 
 ## M7 — Boolean Logic in Software
 
