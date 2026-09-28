@@ -1,11 +1,78 @@
 {
-  "format":"edulogic-sequence-1",
-  "circuit":"counter4-control",
-  "steps":[
-    {"inputs":{"ENABLE":1,"RESET":0},"expect_state":{"Q[3]":0,"Q[2]":0,"Q[1]":0,"Q[0]":1}},
-    {"inputs":{"ENABLE":1,"RESET":0},"expect_state":{"Q[3]":0,"Q[2]":0,"Q[1]":1,"Q[0]":0}},
-    {"inputs":{"ENABLE":0,"RESET":0},"expect_state":{"Q[3]":0,"Q[2]":0,"Q[1]":1,"Q[0]":0}},
-    {"inputs":{"ENABLE":1,"RESET":0},"expect_state":{"Q[3]":0,"Q[2]":0,"Q[1]":1,"Q[0]":1}},
-    {"inputs":{"ENABLE":1,"RESET":1},"expect_state":{"Q[3]":0,"Q[2]":0,"Q[1]":0,"Q[0]":0}}
+  "format": "edulogic-sequence-1",
+  "circuit": "counter4-control",
+  "steps": [
+    {
+      "inputs": {
+        "ENABLE": 0,
+        "RESET": 1
+      },
+      "expect_state": {
+        "Q[3]": 0,
+        "Q[2]": 0,
+        "Q[1]": 0,
+        "Q[0]": 0
+      }
+    },
+    {
+      "inputs": {
+        "ENABLE": 1,
+        "RESET": 0
+      },
+      "expect_state": {
+        "Q[3]": 0,
+        "Q[2]": 0,
+        "Q[1]": 0,
+        "Q[0]": 1
+      }
+    },
+    {
+      "inputs": {
+        "ENABLE": 1,
+        "RESET": 0
+      },
+      "expect_state": {
+        "Q[3]": 0,
+        "Q[2]": 0,
+        "Q[1]": 1,
+        "Q[0]": 0
+      }
+    },
+    {
+      "inputs": {
+        "ENABLE": 0,
+        "RESET": 0
+      },
+      "expect_state": {
+        "Q[3]": 0,
+        "Q[2]": 0,
+        "Q[1]": 1,
+        "Q[0]": 0
+      }
+    },
+    {
+      "inputs": {
+        "ENABLE": 1,
+        "RESET": 0
+      },
+      "expect_state": {
+        "Q[3]": 0,
+        "Q[2]": 0,
+        "Q[1]": 1,
+        "Q[0]": 1
+      }
+    },
+    {
+      "inputs": {
+        "ENABLE": 1,
+        "RESET": 1
+      },
+      "expect_state": {
+        "Q[3]": 0,
+        "Q[2]": 0,
+        "Q[1]": 0,
+        "Q[0]": 0
+      }
+    }
   ]
 }
