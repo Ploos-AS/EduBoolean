@@ -1,0 +1,10 @@
+{
+  "format": "edulogic-1",
+  "name": "half-adder",
+  "inputs": ["A", "B"],
+  "outputs": ["SUM", "CARRY"],
+  "gates": [
+    {"type": "XOR", "inputs": ["A", "B"], "output": "SUM"},
+    {"type": "AND", "inputs": ["A", "B"], "output": "CARRY"}
+  ]
+}
