@@ -133,6 +133,8 @@ class EduLogicTests(unittest.TestCase):
         self.assertIn("if (RESET)", v)
         self.assertIn("if (ENABLE)", v)
         self.assertIn("<= 1'b0;", v)
+        self.assertIn("output reg Q_3;", v)
+        self.assertIn("output reg Q_0;", v)
         self.assertIn("{Q_3, Q_2, Q_1, Q_0} <= {Q_3, Q_2, Q_1, Q_0} + 4'd1;", v)
 
     def test_cycle_is_rejected(self):
