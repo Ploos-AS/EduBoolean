@@ -1,15 +1,25 @@
 {
-  "format":"edulogic-1",
-  "name":"counter4-control",
-  "inputs":["ENABLE","RESET"],
-  "outputs":["Q3","Q2","Q1","Q0"],
-  "state":[
-    {"type":"COUNTER","q":"Q","width":4,"initial":0,"enable":"ENABLE","reset":"RESET"}
+  "format": "edulogic-1",
+  "name": "counter4-control",
+  "inputs": [
+    "ENABLE",
+    "RESET"
   ],
-  "gates":[
-    {"type":"OR","inputs":["Q[3]","Q[3]"],"output":"Q3"},
-    {"type":"OR","inputs":["Q[2]","Q[2]"],"output":"Q2"},
-    {"type":"OR","inputs":["Q[1]","Q[1]"],"output":"Q1"},
-    {"type":"OR","inputs":["Q[0]","Q[0]"],"output":"Q0"}
-  ]
+  "outputs": [
+    "Q[3]",
+    "Q[2]",
+    "Q[1]",
+    "Q[0]"
+  ],
+  "state": [
+    {
+      "type": "COUNTER",
+      "q": "Q",
+      "width": 4,
+      "initial": 0,
+      "enable": "ENABLE",
+      "reset": "RESET"
+    }
+  ],
+  "gates": []
 }
