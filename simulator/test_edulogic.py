@@ -156,7 +156,20 @@ class EduLogicTests(unittest.TestCase):
         self.assertIn("module counter4_control_sequence_tb;",tb)
         self.assertIn("counter4_control dut(clk, ENABLE, RESET, Q_3_, Q_2_, Q_1_, Q_0_);",tb)
         self.assertIn("PASS generated sequence",tb)
-        self.assertIn("FAIL step 5 Q_0",tb)
+        self.assertIn("FAIL step 6 Q_0_",tb)
+
+    def test_sequence_rtl_oracle_requires_reset_established_state(self):
+        c=self.load_example("counter4-control.json")
+        suite=json.loads((ROOT / "examples" / "counter4-control.sequence.json").read_text())
+        suite["steps"][0]["inputs"]["RESET"]=0
+        with self.assertRaises(ValueError):
+            edulogic.export_sequence_testbench(c,suite)
+
+    def test_sequence_rtl_oracle_rejects_state_without_reset(self):
+        c=self.load_example("counter2.json")
+        suite={"format":"edulogic-sequence-1","circuit":c.get("name"),"steps":[]}
+        with self.assertRaises(ValueError):
+            edulogic.export_sequence_testbench(c,suite)
 
     def test_initial_state_must_fit_width(self):
         c={"format":"edulogic-1","inputs":[],"outputs":["Q[0]"],
