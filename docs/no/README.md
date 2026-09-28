@@ -167,3 +167,19 @@ Praksis: [M5-oppgaver](../../exercises/m5-sequential.md) og [2-bits synkron tell
 51. [Broen til EduCPU](51-broen-til-educpu.md)
 
 Praksis: [M6-oppgaver](../../exercises/m6-cpu.md), [mini-ALU](../../labs/08-mini-alu.md) og [minimal CPU-sporing](../../labs/09-mini-cpu-spor.md).
+
+
+## M7 – Boolsk logikk i programvare
+
+52. [Bool i programmering](52-bool-i-programmering.md)
+53. [Sammenligninger](53-sammenligninger.md)
+54. [AND, OR og NOT i kode](54-logiske-operatorer.md)
+55. [if og kontrollflyt](55-if.md)
+56. [Short-circuit evaluation](56-short-circuit.md)
+57. [Logiske kontra bitvise operatorer](57-logisk-vs-bitvis.md)
+58. [Bitmasker](58-bitmasker.md)
+59. [Flagg, features og permissions](59-flagg-permissions.md)
+60. [De Morgan i kode](60-de-morgan-kode.md)
+61. [Fra kode tilbake til logikk](61-kode-til-logikk.md)
+
+Praksis: [M7-oppgaver](../../exercises/m7-software.md), [tilgangspolicy og uttømmende testing](../../labs/10-policy-test.md) og [bitmasker](../../labs/11-bitmasker.md).
