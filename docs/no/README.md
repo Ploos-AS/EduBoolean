@@ -80,3 +80,16 @@ Se [`exercises/README.md`](../../exercises/README.md).
 ## Første lab
 
 Se [`labs/01-brytere-og-logikk.md`](../../labs/01-brytere-og-logikk.md).
+
+
+## M1 – Boolean Fundamentals
+
+1. [Sant, usant, 0 og 1](01-sant-usant-0-og-1.md)
+2. [NOT](02-not.md)
+3. [AND](03-and.md)
+4. [OR](04-or.md)
+5. [XOR](05-xor.md)
+6. [NAND, NOR og XNOR](06-nand-nor-xnor.md)
+7. [Sannhetstabeller](07-sannhetstabeller.md)
+
+Til M1 hører også [oppgavesettet](../../exercises/m1-fundamentals.md) og [halvadder-labben](../../labs/02-halvadderer.md).
