@@ -151,3 +151,19 @@ Praksis: [M4-oppgaver](../../exercises/m4-karnaugh.md) og [K-map-optimaliserings
 41. [Sett sammen et sekvensielt system](41-sequential-system.md)
 
 Praksis: [M5-oppgaver](../../exercises/m5-sequential.md) og [2-bits synkron teller](../../labs/07-2bit-teller.md).
+
+
+## M6 – Fra logikk til CPU
+
+42. [Fra byggeklosser til CPU](42-fra-byggeklosser-til-cpu.md)
+43. [ALU](43-alu.md)
+44. [CPU-flagg](44-flagg.md)
+45. [Registre og registervalg](45-registerfil.md)
+46. [Opcode-dekoding](46-opcode.md)
+47. [Kontrollsignaler](47-kontrollsignaler.md)
+48. [Program counter](48-program-counter.md)
+49. [Fetch og execute](49-fetch-execute.md)
+50. [Minimal pedagogisk datapath](50-minimal-datapath.md)
+51. [Broen til EduCPU](51-broen-til-educpu.md)
+
+Praksis: [M6-oppgaver](../../exercises/m6-cpu.md), [mini-ALU](../../labs/08-mini-alu.md) og [minimal CPU-sporing](../../labs/09-mini-cpu-spor.md).
