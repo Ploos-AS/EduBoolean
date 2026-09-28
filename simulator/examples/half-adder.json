@@ -3,6 +3,16 @@
   "name": "half-adder",
   "inputs": ["A", "B"],
   "outputs": ["SUM", "CARRY"],
+  "teaching": {
+    "switches": [
+      {"signal": "A", "label": "Input A"},
+      {"signal": "B", "label": "Input B"}
+    ],
+    "leds": [
+      {"signal": "SUM", "label": "Sum"},
+      {"signal": "CARRY", "label": "Carry"}
+    ]
+  },
   "gates": [
     {"type": "XOR", "inputs": ["A", "B"], "output": "SUM"},
     {"type": "AND", "inputs": ["A", "B"], "output": "CARRY"}
