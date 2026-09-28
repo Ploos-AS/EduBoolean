@@ -307,6 +307,13 @@ def export_sequence_testbench(circuit, suite, module_name=None):
     if suite.get("format") != "edulogic-sequence-1": raise ValueError("sequence format must be edulogic-sequence-1")
     if suite.get("circuit") and suite["circuit"] != circuit.get("name"): raise ValueError("sequence targets a different circuit")
     verilog_names(circuit)
+    reset_signals = {cell.get("reset") for cell in circuit.get("state", []) if cell.get("reset")}
+    if not reset_signals:
+        raise ValueError("sequence RTL oracle requires reset on state cells to establish portable initial state")
+    first_inputs = suite.get("steps", [{}])[0].get("inputs", {}) if suite.get("steps") else {}
+    inactive_resets = sorted(name for name in reset_signals if bit(first_inputs.get(name, 0)) != 1)
+    if inactive_resets:
+        raise ValueError(f"sequence RTL oracle first step must assert reset: {inactive_resets}")
     module_name = verilog_module_name(module_name or circuit.get("name", "edulogic"))
     tb_name = module_name + "_sequence_tb"
     ins = circuit["inputs"]
