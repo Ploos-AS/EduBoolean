@@ -118,3 +118,29 @@ python3 edulogic.py examples/counter4-control.json --sequence examples/counter4-
 ```
 
 Truth tables are intentionally limited to circuits without state. Stateful behavior must be observed with deterministic ticks or a versioned sequence suite. Vector and sequence suites validate their format version and, when supplied, their target circuit name.
+
+
+## M8 v1 format contract
+
+The three M8 document identifiers are now treated as versioned compatibility contracts:
+
+- `edulogic-1` — circuit structure and deterministic reference semantics
+- `edulogic-vectors-1` — complete combinational input/output qualification
+- `edulogic-sequence-1` — complete synchronous tick/state qualification
+
+A v1 qualification suite is deliberately fail-closed. Every combinational vector must specify every primary input and every observable output. Every sequential step must specify every primary input and the complete post-tick state. Unknown names, missing names, wrong format versions and a mismatched optional `circuit` target are errors rather than partial checks.
+
+### Compatibility rule
+
+Once M8 is qualified, existing v1 documents must keep their meaning. Additions that would change how an existing valid v1 document evaluates require a new format version. New optional metadata may be added only when older v1 behavior remains unchanged.
+
+The deterministic semantic order for a sequential tick is:
+
+1. current state and primary inputs are visible
+2. combinational logic settles
+3. synchronous reset is evaluated
+4. otherwise disabled cells hold
+5. otherwise DFF/REGISTER inputs are sampled or COUNTER advances
+6. all state updates become visible atomically
+
+The reference model uses only binary 0/1 logic. HDL `X`/`Z`, propagation delay, asynchronous reset and implicit wall-clock behavior are outside the v1 contract.
