@@ -160,12 +160,23 @@ def run_sequence(circuit, suite):
     if suite.get("format") != "edulogic-sequence-1": raise ValueError("sequence format must be edulogic-sequence-1")
     if suite.get("circuit") and suite["circuit"] != circuit.get("name"): raise ValueError("sequence targets a different circuit")
     state = initial_state(circuit)
+    state_set = set(state)
+    input_set = set(circuit["inputs"])
     results = []
     for index, step in enumerate(suite["steps"], 1):
         inputs = step.get("inputs", {})
-        state = tick(circuit, inputs, state)
+        missing_inputs = input_set - set(inputs)
+        unknown_inputs = set(inputs) - input_set
+        if missing_inputs: raise ValueError(f"sequence step {index} missing inputs: {sorted(missing_inputs)}")
+        if unknown_inputs: raise ValueError(f"sequence step {index} has unknown inputs: {sorted(unknown_inputs)}")
+        if "expect_state" not in step: raise ValueError(f"sequence step {index} needs expect_state")
         expected = {k: bit(v) for k, v in step["expect_state"].items()}
-        ok = all(state.get(k) == v for k, v in expected.items())
+        unknown_state = set(expected) - state_set
+        if unknown_state: raise ValueError(f"sequence step {index} expects unknown state: {sorted(unknown_state)}")
+        missing_state = state_set - set(expected)
+        if missing_state: raise ValueError(f"sequence step {index} must specify complete state: {sorted(missing_state)}")
+        state = tick(circuit, inputs, state)
+        ok = state == expected
         results.append({"index":index,"ok":ok,"inputs":inputs,"expect":expected,"state":dict(state)})
     return results
 
