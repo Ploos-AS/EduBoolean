@@ -120,3 +120,18 @@ Til M2 hører [oppgavesettet](../../exercises/m2-algebra.md) og [kretsforenkling
 22. [Komparatorer](22-komparator.md)
 
 Praksis: [M3-oppgaver](../../exercises/m3-combinational.md), [4-bits adderer](../../labs/04-bygg-4bit-adder.md) og [2-til-1 MUX](../../labs/05-mux.md).
+
+
+## M4 – Karnaugh-kart
+
+23. [Hvorfor Karnaugh-kart?](23-karnaugh-intro.md)
+24. [2-variabel K-map](24-kmap-2.md)
+25. [Gray-kode og naboskap](25-gray-naboskap.md)
+26. [3-variabel K-map](26-kmap-3.md)
+27. [4-variabel K-map](27-kmap-4.md)
+28. [Fra gruppe til uttrykk](28-gruppe-til-uttrykk.md)
+29. [Wrap-around og overlapp](29-wrap-overlap.md)
+30. [Don't-care-betingelser](30-dont-care.md)
+31. [K-map kontra algebra](31-kmap-vs-algebra.md)
+
+Praksis: [M4-oppgaver](../../exercises/m4-karnaugh.md) og [K-map-optimaliseringslab](../../labs/06-kmap-optimalisering.md).
