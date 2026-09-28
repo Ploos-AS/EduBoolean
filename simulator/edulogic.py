@@ -201,12 +201,21 @@ def run_vectors(circuit, suite):
     if suite.get("circuit") and suite["circuit"] != circuit.get("name"): raise ValueError("vectors target a different circuit")
     if circuit.get("state"): raise ValueError("vectors require a combinational circuit; use a sequence for stateful circuits")
     results = []
+    input_set, output_set = set(circuit["inputs"]), set(circuit["outputs"])
     for index, vector in enumerate(suite["vectors"], 1):
-        actual = evaluate(circuit, vector["inputs"])
+        inputs = vector.get("inputs", {})
+        missing_inputs = input_set - set(inputs)
+        unknown_inputs = set(inputs) - input_set
+        if missing_inputs: raise ValueError(f"vector {index} missing inputs: {sorted(missing_inputs)}")
+        if unknown_inputs: raise ValueError(f"vector {index} has unknown inputs: {sorted(unknown_inputs)}")
+        actual = evaluate(circuit, inputs)
+        if "expect" not in vector: raise ValueError(f"vector {index} needs expect")
         expected = {k: bit(v) for k, v in vector["expect"].items()}
-        unknown = set(expected) - set(circuit["outputs"])
-        if unknown: raise ValueError(f"vectors expect unknown outputs: {sorted(unknown)}")
-        ok = all(actual.get(k) == v for k, v in expected.items())
+        unknown = set(expected) - output_set
+        if unknown: raise ValueError(f"vector {index} expects unknown outputs: {sorted(unknown)}")
+        missing_outputs = output_set - set(expected)
+        if missing_outputs: raise ValueError(f"vector {index} must specify complete outputs: {sorted(missing_outputs)}")
+        ok = actual == expected
         results.append({"index": index, "ok": ok, "inputs": vector["inputs"],
                         "expect": expected, "actual": actual})
     return results
