@@ -120,6 +120,15 @@ class EduLogicTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             edulogic.run_sequence(c, {"format":"edulogic-sequence-1","circuit":"other","steps":[]})
 
+    def test_sequence_generates_rtl_oracle(self):
+        c=self.load_example("counter4-control.json")
+        suite=json.loads((ROOT / "examples" / "counter4-control.sequence.json").read_text())
+        tb=edulogic.export_sequence_testbench(c,suite)
+        self.assertIn("module counter4_control_sequence_tb;",tb)
+        self.assertIn("counter4_control dut(clk, ENABLE, RESET, Q_3, Q_2, Q_1, Q_0);",tb)
+        self.assertIn("PASS generated sequence",tb)
+        self.assertIn("FAIL step 5 Q_0",tb)
+
     def test_verilog_half_adder_golden(self):
         c = self.load_example("half-adder.json")
         golden = (ROOT / "examples" / "half-adder.v").read_text()
