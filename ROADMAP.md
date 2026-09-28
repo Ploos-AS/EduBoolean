@@ -159,7 +159,7 @@ Capabilities:
 - [x] declarative sequential qualification vectors
 - [x] initial synthesizable Verilog-2001 export
 - [x] golden-output and structural HDL exporter tests
-- [x] GitHub Actions external HDL compiler/simulator qualification (Icarus Verilog)
+- [x] reusable hardware-ci HDL qualification integration (Icarus + Yosys + conformance)
 - [x] executable half-adder Verilog testbench
 - [ ] confirm first CI qualification run green
 - [x] minimal dependency-free browser visualizer for combinational teaching circuits
