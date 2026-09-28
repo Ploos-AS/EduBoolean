@@ -13,7 +13,8 @@ hdl-test: hdl-generate
 	iverilog -g2012 -s half_adder_tb -o /tmp/half-adder.vvp build-half-adder.v examples/half-adder.tb.v
 	vvp /tmp/half-adder.vvp
 	$(PYTHON) edulogic.py examples/counter4-control.json --verilog > build-counter4-control.v
-	iverilog -g2012 -s counter4_control_tb -o /tmp/counter4-control.vvp build-counter4-control.v examples/counter4-control.tb.v
+	$(PYTHON) edulogic.py examples/counter4-control.json --sequence-testbench examples/counter4-control.sequence.json > build-counter4-control.tb.v
+	iverilog -g2012 -s counter4_control_sequence_tb -o /tmp/counter4-control.vvp build-counter4-control.v build-counter4-control.tb.v
 	vvp /tmp/counter4-control.vvp
 
 hdl-conformance:
