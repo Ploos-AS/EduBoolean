@@ -39,12 +39,15 @@ Goal: complete the beginner core.
 
 Goal: teach Boolean manipulation without assuming prior algebra expertise.
 
-- identity, domination, idempotence and complement laws
-- commutative, associative and distributive laws
-- absorption
-- De Morgan's laws
-- algebraic simplification
-- equivalence checking using truth tables
+- [x] identity, domination, idempotence and complement laws
+- [x] commutative, associative and distributive laws
+- [x] absorption
+- [x] De Morgan's laws
+- [x] algebraic simplification
+- [x] equivalence checking using truth tables
+- [x] worked exercises and circuit-simplification lab
+
+**M2 core status: COMPLETE.**
 
 ## M3 — Logic Gates and Combinational Circuits
 
