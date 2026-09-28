@@ -24,6 +24,7 @@ It supports versioned JSON circuits, deterministic combinational evaluation and 
 cd simulator
 python3 edulogic.py examples/half-adder.json --truth-table
 python3 edulogic.py examples/half-adder.json --set A=1 --set B=1
+python3 edulogic.py examples/counter2.json --ticks 8
 python3 -m unittest -v test_edulogic.py
 ```
 
@@ -62,6 +63,7 @@ A circuit that cannot settle because of a cycle or missing dependency is rejecte
 - named switches/LEDs as teaching metadata
 - signal trace/introspection
 - reusable test-vector format
-- sequential state model
+- deterministic DFF/tick state model (implemented)
+- register/counter convenience components
 - optional browser/desktop frontend
 - HDL bridge experiments
