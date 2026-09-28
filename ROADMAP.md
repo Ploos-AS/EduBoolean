@@ -142,15 +142,16 @@ Goal: make the course interactive.
 
 Capabilities:
 
-- [ ] switches and LEDs teaching metadata
+- [x] switches and LEDs teaching metadata
 - [x] NOT/AND/OR/XOR/NAND/NOR/XNOR gates
-- [ ] wires and signal highlighting
+- [x] signal introspection foundation for wire highlighting
 - [x] automatic truth-table generation
 - [x] combinational circuit evaluation
 - [x] versioned JSON save/load circuit format
 - [x] deterministic core independent of UI
 - [x] headless CLI
 - [x] unit tests and half-adder qualification example
+- [x] reusable declarative test-vector format and CLI runner
 - [ ] explicit sequential clock/state model
 - [ ] later HDL export/import experiments
 
