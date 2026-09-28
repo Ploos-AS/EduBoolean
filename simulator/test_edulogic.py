@@ -102,6 +102,24 @@ class EduLogicTests(unittest.TestCase):
            "gates":[{"type":"AND","inputs":["A","MISSING"],"output":"F"}]}
         with self.assertRaises(ValueError): edulogic.validate(c)
 
+    def test_truth_table_rejects_stateful_circuit(self):
+        with self.assertRaises(ValueError):
+            edulogic.truth_table(self.load_example("counter2.json"))
+
+    def test_vector_format_and_target_are_validated(self):
+        c=self.load_example("half-adder.json")
+        with self.assertRaises(ValueError):
+            edulogic.run_vectors(c, {"format":"wrong","vectors":[]})
+        with self.assertRaises(ValueError):
+            edulogic.run_vectors(c, {"format":"edulogic-vectors-1","circuit":"other","vectors":[]})
+
+    def test_sequence_format_and_target_are_validated(self):
+        c=self.load_example("counter4-control.json")
+        with self.assertRaises(ValueError):
+            edulogic.run_sequence(c, {"format":"wrong","steps":[]})
+        with self.assertRaises(ValueError):
+            edulogic.run_sequence(c, {"format":"edulogic-sequence-1","circuit":"other","steps":[]})
+
     def test_verilog_half_adder_golden(self):
         c = self.load_example("half-adder.json")
         golden = (ROOT / "examples" / "half-adder.v").read_text()
