@@ -159,7 +159,9 @@ Capabilities:
 - [x] declarative sequential qualification vectors
 - [x] initial synthesizable Verilog-2001 export
 - [x] golden-output and structural HDL exporter tests
-- [ ] external HDL compiler/simulator qualification
+- [x] GitHub Actions external HDL compiler/simulator qualification (Icarus Verilog)
+- [x] executable half-adder Verilog testbench
+- [ ] confirm first CI qualification run green
 - [ ] optional HDL import experiments
 
 **M8 status: IN PROGRESS.** Core simulation, teaching metadata, deterministic sequential state and initial Verilog export are implemented. External HDL qualification and richer visualization remain before M8 is closed.
