@@ -161,12 +161,12 @@ Capabilities:
 - [x] golden-output and structural HDL exporter tests
 - [x] reusable hardware-ci HDL qualification integration (Icarus + Yosys + conformance)
 - [x] executable half-adder Verilog testbench
-- [ ] confirm first CI qualification run green
+- [x] confirm stable `hardware-ci@v1` qualification run green
 - [x] minimal dependency-free browser visualizer for combinational teaching circuits
 - [x] freeze `edulogic-1`, `edulogic-vectors-1` and `edulogic-sequence-1` compatibility contracts
-- [ ] optional HDL import experiments
+- [ ] optional HDL import experiments (future; not an M8 gate)
 
-**M8 status: IN PROGRESS.** Core simulation, teaching metadata, deterministic sequential state and initial Verilog export are implemented. External HDL qualification and richer visualization remain before M8 is closed.
+**M8 status: COMPLETE.** EduLogic has deterministic combinational/sequential semantics, frozen v1 formats, browser visualization, Verilog export, executable RTL oracles and green reusable `hardware-ci@v1` qualification. Optional HDL import remains a future experiment and is not an M8 release gate.
 
 ## M9 — Publishing
 
