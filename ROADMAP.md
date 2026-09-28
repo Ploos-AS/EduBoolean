@@ -157,9 +157,12 @@ Capabilities:
 - [x] REGISTER and COUNTER convenience state cells
 - [x] synchronous reset and enable/hold semantics
 - [x] declarative sequential qualification vectors
-- [ ] later HDL export/import experiments
+- [x] initial synthesizable Verilog-2001 export
+- [x] golden-output and structural HDL exporter tests
+- [ ] external HDL compiler/simulator qualification
+- [ ] optional HDL import experiments
 
-**M8 status: IN PROGRESS.** Combinational and deterministic sequential cores are usable and the M5 counter is represented directly; richer visualization/components and HDL bridge work remain.
+**M8 status: IN PROGRESS.** Core simulation, teaching metadata, deterministic sequential state and initial Verilog export are implemented. External HDL qualification and richer visualization remain before M8 is closed.
 
 ## M9 — Publishing
 
