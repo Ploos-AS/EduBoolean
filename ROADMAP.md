@@ -85,13 +85,18 @@ Goal: provide a visual simplification method.
 
 Goal: introduce state and memory as the next conceptual step.
 
-- why combinational logic is not enough
-- latch
-- flip-flop
-- clock
-- register
-- counter
-- transition from Boolean algebra toward finite state machines
+- [x] why combinational logic is not enough
+- [x] feedback and stored state
+- [x] SR latch and D latch
+- [x] clock, levels and edges
+- [x] edge-triggered D flip-flop
+- [x] registers and shift registers
+- [x] synchronous counter
+- [x] current-state / next-state model
+- [x] transition from Boolean algebra toward finite state machines
+- [x] exercises and 2-bit counter lab
+
+**M5 core status: COMPLETE.**
 
 EduFSM is a natural follow-on course for deeper treatment of state machines.
 
