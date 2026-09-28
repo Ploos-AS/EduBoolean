@@ -25,3 +25,17 @@ Sequential reset is synchronous, matching the EduLogic tick model. Reset has pri
 The exporter is not a general HDL compiler. M8 does not yet import arbitrary Verilog, model propagation delay, tri-state buses, unknown `X/Z` values, asynchronous reset, multiple clocks or analog behavior.
 
 Generated HDL should be treated as a transparent learning bridge that can later be qualified with an external HDL toolchain and FPGA flow.
+
+
+## Automated qualification
+
+The `EduLogic` GitHub Actions workflow:
+
+1. runs the Python simulator unit tests
+2. installs Icarus Verilog
+3. regenerates the half-adder HDL
+4. compares it with the checked-in golden output
+5. compiles and simulates the half-adder testbench
+6. compiles generated sequential counter HDL
+
+A green workflow therefore checks both the EduLogic reference model and an independent HDL implementation path.
