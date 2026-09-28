@@ -300,11 +300,15 @@ def main():
     parser.add_argument("--sequence", metavar="FILE")
     parser.add_argument("--ticks", type=int, metavar="N")
     parser.add_argument("--verilog", action="store_true")
+    parser.add_argument("--sequence-testbench", metavar="FILE")
     parser.add_argument("--set", action="append", default=[], metavar="NAME=BIT")
     args = parser.parse_args()
     circuit = load(args.circuit)
     if args.verilog:
         print(export_verilog(circuit), end="")
+        return
+    if args.sequence_testbench:
+        print(export_sequence_testbench(circuit, load(args.sequence_testbench)), end="")
         return
     if args.truth_table:
         cols = circuit["inputs"] + circuit["outputs"]
