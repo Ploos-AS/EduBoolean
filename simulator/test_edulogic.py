@@ -26,6 +26,21 @@ class EduLogicTests(unittest.TestCase):
             ((1,0),(1,0)), ((1,1),(0,1))
         ])
 
+    def test_signal_introspection(self):
+        c = {"format":"edulogic-1","inputs":["A","B"],"outputs":["F"],"gates":[
+          {"type":"AND","inputs":["A","B"],"output":"X"},
+          {"type":"NOT","inputs":["X"],"output":"F"}]}
+        self.assertEqual(edulogic.evaluate_signals(c, {"A":1,"B":0}), {"A":1,"B":0,"X":0,"F":1})
+
+    def test_vector_suite(self):
+        c = self.load_example("half-adder.json")
+        suite = json.loads((ROOT / "examples" / "half-adder.vectors.json").read_text())
+        self.assertTrue(all(r["ok"] for r in edulogic.run_vectors(c, suite)))
+
+    def test_teaching_metadata_validation(self):
+        c = self.load_example("half-adder.json")
+        edulogic.validate(c)
+
     def test_order_independent_gate_list(self):
         c={"format":"edulogic-1","inputs":["A","B"],"outputs":["F"],"gates":[
           {"type":"NOT","inputs":["X"],"output":"F"},
