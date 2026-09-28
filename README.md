@@ -8,6 +8,14 @@ Målet er å bygge en sammenhengende forståelse fra `sant/usant` og `0/1`, via 
 
 > Norsk er hovedspråk. Engelsk skal tilbys som sidestilt kursversjon.
 
+## Ploos project contract
+
+EduBoolean is the reference implementation of **PLOOS-PROJECT-1**.
+
+Declared capabilities: `docs`, `i18n`, `software`, `simulator`, `hdl`, `publishing`, `website`.
+
+Project-local sources and tests remain in this repository. Reusable HDL qualification is consumed from `Ploos-AS/hardware-ci@v1`; reusable publication policy and production conventions come from `Ploos-AS/publishing`.
+
 ## Målgruppe
 
 - komplette nybegynnere
@@ -108,7 +116,7 @@ EduBoolean er ment som et fundament for blant annet:
 
 ## Status
 
-**M0 – Foundation: påbegynt**
+**M8 – EduLogic: qualified; M9 publishing integration next.**
 
 Se [ROADMAP.md](ROADMAP.md) for milepæler.
 
