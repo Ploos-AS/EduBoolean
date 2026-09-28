@@ -79,6 +79,29 @@ class EduLogicTests(unittest.TestCase):
         s=edulogic.tick(c,{"D0":1,"D1":1,"EN":0,"RST":1},s)
         self.assertEqual(s,{"Q[0]":0,"Q[1]":0})
 
+    def test_stateful_validation(self):
+        edulogic.validate(self.load_example("counter2.json"))
+        edulogic.validate(self.load_example("counter4-control.json"))
+
+    def test_duplicate_inputs_rejected(self):
+        c={"format":"edulogic-1","inputs":["A","A"],"outputs":["A"],"gates":[]}
+        with self.assertRaises(ValueError): edulogic.validate(c)
+
+    def test_unknown_state_references_rejected(self):
+        c={"format":"edulogic-1","inputs":[],"outputs":["Q"],
+           "state":[{"type":"DFF","q":"Q","d":"MISSING"}],"gates":[]}
+        with self.assertRaises(ValueError): edulogic.validate(c)
+
+    def test_register_width_mismatch_rejected(self):
+        c={"format":"edulogic-1","inputs":["D"],"outputs":["Q[0]","Q[1]"],
+           "state":[{"type":"REGISTER","q":"Q","width":2,"d":["D"]}],"gates":[]}
+        with self.assertRaises(ValueError): edulogic.validate(c)
+
+    def test_unknown_gate_input_rejected(self):
+        c={"format":"edulogic-1","inputs":["A"],"outputs":["F"],
+           "gates":[{"type":"AND","inputs":["A","MISSING"],"output":"F"}]}
+        with self.assertRaises(ValueError): edulogic.validate(c)
+
     def test_verilog_half_adder_golden(self):
         c = self.load_example("half-adder.json")
         golden = (ROOT / "examples" / "half-adder.v").read_text()
