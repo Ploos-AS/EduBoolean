@@ -79,6 +79,21 @@ class EduLogicTests(unittest.TestCase):
         s=edulogic.tick(c,{"D0":1,"D1":1,"EN":0,"RST":1},s)
         self.assertEqual(s,{"Q[0]":0,"Q[1]":0})
 
+    def test_verilog_half_adder_golden(self):
+        c = self.load_example("half-adder.json")
+        golden = (ROOT / "examples" / "half-adder.v").read_text()
+        self.assertEqual(edulogic.export_verilog(c), golden)
+
+    def test_verilog_counter_has_clocked_state(self):
+        c = self.load_example("counter4-control.json")
+        v = edulogic.export_verilog(c)
+        self.assertIn("input clk;", v)
+        self.assertIn("always @(posedge clk)", v)
+        self.assertIn("if (RESET)", v)
+        self.assertIn("if (ENABLE)", v)
+        self.assertIn("<= 1'b0;", v)
+        self.assertIn("{Q_3, Q_2, Q_1, Q_0} <= {Q_3, Q_2, Q_1, Q_0} + 4'd1;", v)
+
     def test_cycle_is_rejected(self):
         c={"format":"edulogic-1","inputs":["A"],"outputs":["F"],"gates":[
           {"type":"AND","inputs":["A","F"],"output":"F"}]}
