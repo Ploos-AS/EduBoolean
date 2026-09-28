@@ -166,6 +166,63 @@ def run_vectors(circuit, suite):
                         "expect": expected, "actual": actual})
     return results
 
+
+def verilog_name(name):
+    """Map EduLogic scalar signal names to conservative Verilog identifiers."""
+    return name.replace("[", "_").replace("]", "")
+
+def export_verilog(circuit, module_name=None):
+    """Export supported EduLogic circuits as synthesizable Verilog-2001."""
+    validate(circuit)
+    module_name = module_name or circuit.get("name", "edulogic").replace("-", "_")
+    sequential = bool(circuit.get("state"))
+    ports = (["clk"] if sequential else []) + circuit["inputs"] + circuit["outputs"]
+    lines = [f"module {module_name}({', '.join(verilog_name(x) for x in ports)});"]
+    if sequential: lines.append("  input clk;")
+    for name in circuit["inputs"]: lines.append(f"  input {verilog_name(name)};")
+    state_set = {n for cell in circuit.get("state", []) for n in state_names(cell)}
+    gate_outputs = {g["output"] for g in circuit["gates"]}
+    for name in circuit["outputs"]:
+        decl = "output reg" if name in state_set else "output"
+        lines.append(f"  {decl} {verilog_name(name)};")
+    internal_state = state_set - set(circuit["outputs"])
+    for name in sorted(internal_state): lines.append(f"  reg {verilog_name(name)};")
+    internal_wires = gate_outputs - set(circuit["outputs"]) - state_set
+    for name in sorted(internal_wires): lines.append(f"  wire {verilog_name(name)};")
+    op = {"AND":" & ","OR":" | ","XOR":" ^ "}
+    for gate in circuit["gates"]:
+        kind=gate["type"].upper(); ins=[verilog_name(x) for x in gate["inputs"]]; out=verilog_name(gate["output"])
+        if kind=="NOT": expr=f"~{ins[0]}"
+        elif kind in ("AND","OR","XOR"): expr=op[kind].join(ins)
+        elif kind in ("NAND","NOR","XNOR"):
+            base={"NAND":"AND","NOR":"OR","XNOR":"XOR"}[kind]; expr=f"~({op[base].join(ins)})"
+        lines.append(f"  assign {out} = {expr};")
+    for cell in circuit.get("state", []):
+        names=state_names(cell); reset=cell.get("reset"); enable=cell.get("enable")
+        lines.append("  always @(posedge clk) begin")
+        prefix = "    "
+        if reset:
+            lines.append(f"    if ({verilog_name(reset)}) begin")
+            for q in names: lines.append(f"      {verilog_name(q)} <= 1'b0;")
+            lines.append("    end" + (" else begin" if enable else " else begin"))
+            prefix="      "
+        if enable:
+            lines.append(f"{prefix}if ({verilog_name(enable)}) begin")
+            prefix += "  "
+        if cell["type"]=="DFF":
+            lines.append(f"{prefix}{verilog_name(cell['q'])} <= {verilog_name(cell['d'])};")
+        elif cell["type"]=="REGISTER":
+            for q,d in zip(names,cell["d"]): lines.append(f"{prefix}{verilog_name(q)} <= {verilog_name(d)};")
+        else:
+            width=len(names); lhs="{" + ", ".join(verilog_name(q) for q in reversed(names)) + "}"
+            lines.append(f"{prefix}{lhs} <= {lhs} + {width}'d{int(cell.get('step',1))};")
+        if enable:
+            prefix=prefix[:-2]; lines.append(f"{prefix}end")
+        if reset: lines.append("    end")
+        lines.append("  end")
+    lines.append("endmodule")
+    return "\n".join(lines) + "\n"
+
 def load(path):
     return json.loads(Path(path).read_text(encoding="utf-8"))
 
@@ -176,9 +233,13 @@ def main():
     parser.add_argument("--trace", action="store_true")
     parser.add_argument("--vectors", metavar="FILE")
     parser.add_argument("--ticks", type=int, metavar="N")
+    parser.add_argument("--verilog", action="store_true")
     parser.add_argument("--set", action="append", default=[], metavar="NAME=BIT")
     args = parser.parse_args()
     circuit = load(args.circuit)
+    if args.verilog:
+        print(export_verilog(circuit), end="")
+        return
     if args.truth_table:
         cols = circuit["inputs"] + circuit["outputs"]
         print(" ".join(cols))
